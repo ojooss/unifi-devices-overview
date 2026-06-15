@@ -1,0 +1,10 @@
+*.local
+/.idea/
+*.tgz
+*.tgz:Zone.Identifier
+.claude/settings.local.json
+/public/assets/
+/var/cache/
+/var/data/
+/var/log/
+/vendor/

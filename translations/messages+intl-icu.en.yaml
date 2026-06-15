@@ -1,0 +1,70 @@
+# Navigation
+nav.brand: 'UniFi Overview'
+nav.overview: Overview
+nav.import: Import
+
+# Document titles (<title>) and page headings (<h1>)
+title.base: 'UniFi Overview'
+title.overview: 'Device Overview – UniFi'
+title.overview.heading: 'Device Overview'
+title.upload: 'Import Support File – UniFi Overview'
+title.upload.heading: 'Import Support File'
+
+# Form field labels and table column headers
+label.upload.file: 'UniFi Support File (.tgz)'
+label.upload.submit: Import
+label.overview.filter.network: Network
+label.overview.filter.search: 'Search (Name / MAC)'
+label.overview.filter.type: 'IP Type'
+label.overview.table.name: 'Device Name'
+label.overview.table.remark: Remark
+label.overview.table.mac: 'MAC Address'
+label.overview.table.ip: 'IP Address'
+label.overview.table.type: Type
+label.overview.table.network: Network
+label.overview.table.updated: 'Last Updated'
+label.overview.table.seen: 'Seen At'
+
+# Select options
+option.network.all: 'All Networks'
+option.type.all: All
+option.type.fixed: Fixed
+option.type.dynamic: Dynamic
+
+# Input placeholders
+placeholder.overview.filter.search: 'e.g. shelly or e4:b0:63'
+placeholder.overview.name: 'Display name…'
+placeholder.overview.remark: 'Enter remark…'
+
+# Buttons and links
+button.overview.import: '+ Import Support File'
+button.overview.filter: Filter
+button.overview.reset: Reset
+button.overview.reset_filters: 'Reset filters'
+button.overview.import_empty: 'Import Support File'
+button.modal.cancel: Cancel
+button.modal.save: Save
+
+# Status badges
+badge.type.fixed: Fixed
+badge.type.dynamic: Dynamic
+
+# Modal dialog titles
+modal.overview.name.title: 'Edit Display Name'
+modal.overview.remark.title: 'Edit Remark'
+
+# Descriptive texts and hints
+text.overview.count: '{count, plural, =0{No entries found} one{# entry found} other{# entries found}}'
+text.overview.remark.add: '✏ add'
+text.overview.name.hint: 'Leave empty to use the original hostname.'
+text.upload.file.hint: 'UniFi UDM support files in <code>.tgz</code> format, max. 100 MB'
+text.upload.note.label: 'Note:'
+text.upload.note.body: 'The support file is parsed and network and device data are stored in the database. The timestamp encoded in the filename is used as the capture time.'
+
+# Empty states
+empty.overview.filtered: 'No entries found for the selected filters.'
+empty.overview.default: 'No data available yet.'
+
+# Flash messages
+message.upload.success: '{count, plural, one{# device entry imported successfully.} other{# device entries imported successfully.}}'
+message.upload.error: 'Import error: {error}'

@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'title.upload'|trans }}{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <h1 class="h3 mb-4">{{ 'title.upload.heading'|trans }}</h1>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'novalidate': 'novalidate'}}) }}
+                    <div class="mb-3">
+                        {{ form_label(form.file, null, {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                        {{ form_widget(form.file, {'attr': {'class': 'form-control form-control-lg'}}) }}
+                        {{ form_errors(form.file) }}
+                        <div class="form-text">{{ 'text.upload.file.hint'|trans|raw }}</div>
+                    </div>
+                    <div class="d-grid">
+                        {{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary btn-lg'}}) }}
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+
+        <div class="mt-3 text-muted small">
+            <strong>{{ 'text.upload.note.label'|trans }}</strong> {{ 'text.upload.note.body'|trans }}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+.env.*.local
+.env.local
+.git/
+.github/
+.idea/
+CLAUDE.md
+README.md
+rector.php
+support-*.tgz
+var/cache/
+var/data/
+var/log/

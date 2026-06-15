@@ -1,0 +1,70 @@
+# Navigation
+nav.brand: 'UniFi Overview'
+nav.overview: Übersicht
+nav.import: Import
+
+# Dokumenttitel (<title>) und Seitenüberschriften (<h1>)
+title.base: 'UniFi Overview'
+title.overview: 'Geräteübersicht – UniFi'
+title.overview.heading: Geräteübersicht
+title.upload: 'Support-Datei importieren – UniFi'
+title.upload.heading: 'Support-Datei importieren'
+
+# Formularfeld-Labels und Tabellenspaltenköpfe
+label.upload.file: 'UniFi Support-Datei (.tgz)'
+label.upload.submit: Importieren
+label.overview.filter.network: Netzwerk
+label.overview.filter.search: 'Suche (Name / MAC)'
+label.overview.filter.type: IP-Typ
+label.overview.table.name: Gerätename
+label.overview.table.remark: Bemerkung
+label.overview.table.mac: MAC-Adresse
+label.overview.table.ip: IP-Adresse
+label.overview.table.type: Typ
+label.overview.table.network: Netzwerk
+label.overview.table.updated: 'Zuletzt aktualisiert'
+label.overview.table.seen: 'Gesehen am'
+
+# Auswahloptionen
+option.network.all: 'Alle Netzwerke'
+option.type.all: Alle
+option.type.fixed: Fest
+option.type.dynamic: Dynamisch
+
+# Eingabe-Platzhalter
+placeholder.overview.filter.search: 'z. B. shelly oder e4:b0:63'
+placeholder.overview.name: 'Anzeigename …'
+placeholder.overview.remark: 'Bemerkung eingeben …'
+
+# Schaltflächen und Links
+button.overview.import: '+ Support-Datei importieren'
+button.overview.filter: Filtern
+button.overview.reset: Zurücksetzen
+button.overview.reset_filters: 'Filter zurücksetzen'
+button.overview.import_empty: 'Support-Datei importieren'
+button.modal.cancel: Abbrechen
+button.modal.save: Speichern
+
+# Statusbadges
+badge.type.fixed: Fest
+badge.type.dynamic: Dynamisch
+
+# Modaldialog-Titel
+modal.overview.name.title: 'Anzeigename bearbeiten'
+modal.overview.remark.title: 'Bemerkung bearbeiten'
+
+# Beschreibungstexte und Hinweise
+text.overview.count: '{count, plural, =0{Keine Einträge gefunden} one{# Eintrag gefunden} other{# Einträge gefunden}}'
+text.overview.remark.add: '✏ hinzufügen'
+text.overview.name.hint: 'Leer lassen, um den originalen Hostnamen zu verwenden.'
+text.upload.file.hint: 'UniFi UDM Support-Dateien im Format <code>.tgz</code>, max. 100 MB'
+text.upload.note.label: 'Hinweis:'
+text.upload.note.body: 'Die Support-Datei wird analysiert und Netzwerk- sowie Gerätedaten werden in der Datenbank gespeichert. Der Zeitstempel im Dateinamen wird als Erfassungszeitpunkt verwendet.'
+
+# Leerzustände
+empty.overview.filtered: 'Keine Einträge für diese Filterkriterien gefunden.'
+empty.overview.default: 'Noch keine Daten vorhanden.'
+
+# Flash-Meldungen
+message.upload.success: '{count, plural, one{# Geräteeintrag erfolgreich importiert.} other{# Geräteeinträge erfolgreich importiert.}}'
+message.upload.error: 'Fehler beim Import: {error}'

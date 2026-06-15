@@ -1,0 +1,220 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'title.overview'|trans }}{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">{{ 'title.overview.heading'|trans }}</h1>
+    <a href="{{ path('upload') }}" class="btn btn-primary btn-sm">{{ 'button.overview.import'|trans }}</a>
+</div>
+
+<form method="get" class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold mb-1">{{ 'label.overview.filter.network'|trans }}</label>
+                <select name="network" class="form-select form-select-sm">
+                    <option value="">{{ 'option.network.all'|trans }}</option>
+                    {% for network in networks %}
+                        <option value="{{ network.name }}"
+                            {{ filters.network == network.name ? 'selected' : '' }}>
+                            {{ network.name }}
+                            {% if network.subnet %}({{ network.subnet }}){% endif %}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold mb-1">{{ 'label.overview.filter.search'|trans }}</label>
+                <input type="text" name="search" class="form-control form-control-sm"
+                       value="{{ filters.search }}"
+                       placeholder="{{ 'placeholder.overview.filter.search'|trans }}">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-semibold mb-1">{{ 'label.overview.filter.type'|trans }}</label>
+                <select name="type" class="form-select form-select-sm">
+                    <option value="">{{ 'option.type.all'|trans }}</option>
+                    <option value="fixed" {{ filters.type == 'fixed' ? 'selected' : '' }}>{{ 'option.type.fixed'|trans }}</option>
+                    <option value="dynamic" {{ filters.type == 'dynamic' ? 'selected' : '' }}>{{ 'option.type.dynamic'|trans }}</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary btn-sm w-100">{{ 'button.overview.filter'|trans }}</button>
+            </div>
+            {% if filters.network or filters.search or filters.type %}
+            <div class="col-md-2">
+                <a href="{{ path('overview') }}" class="btn btn-outline-secondary btn-sm w-100">{{ 'button.overview.reset'|trans }}</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</form>
+
+{% if leases is empty %}
+    <div class="card shadow-sm">
+        <div class="card-body text-center py-5">
+            {% if filters.network or filters.search or filters.type %}
+                <p class="text-muted mb-2">{{ 'empty.overview.filtered'|trans }}</p>
+                <a href="{{ path('overview') }}" class="btn btn-outline-secondary btn-sm">{{ 'button.overview.reset_filters'|trans }}</a>
+            {% else %}
+                <p class="text-muted mb-2">{{ 'empty.overview.default'|trans }}</p>
+                <a href="{{ path('upload') }}" class="btn btn-primary btn-sm">{{ 'button.overview.import_empty'|trans }}</a>
+            {% endif %}
+        </div>
+    </div>
+{% else %}
+    <div class="text-muted small mb-2">{{ 'text.overview.count'|trans({count: leases|length}) }}</div>
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-sm mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="ps-3">{{ 'label.overview.table.name'|trans }}</th>
+                        <th>{{ 'label.overview.table.remark'|trans }}</th>
+                        <th>{{ 'label.overview.table.mac'|trans }}</th>
+                        <th>{{ 'label.overview.table.ip'|trans }}</th>
+                        <th>{{ 'label.overview.table.type'|trans }}</th>
+                        <th>{{ 'label.overview.table.network'|trans }}</th>
+                        <th class="text-muted">{{ 'label.overview.table.updated'|trans }}</th>
+                        <th class="text-muted">{{ 'label.overview.table.seen'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lease in leases %}
+                    <tr>
+                        <td class="ps-3">
+                            <button type="button"
+                                    class="btn btn-link btn-sm p-0 text-start text-decoration-none name-btn"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#nameModal"
+                                    data-lease-id="{{ lease.id }}"
+                                    data-custom-name="{{ lease.customName|default('')|e('html_attr') }}"
+                                    data-return="{{ app.request.uri }}">
+                                {% if lease.customName %}
+                                    <span class="fw-semibold text-body">{{ lease.customName }}</span>
+                                    {% if lease.hostname %}
+                                        <br><small class="text-muted fw-normal">{{ lease.hostname }}</small>
+                                    {% endif %}
+                                {% elseif lease.hostname %}
+                                    {{ lease.hostname }}
+                                {% else %}
+                                    <em class="text-muted">–</em>
+                                {% endif %}
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button"
+                                    class="btn btn-link btn-sm p-0 text-start text-decoration-none remark-btn"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#remarkModal"
+                                    data-lease-id="{{ lease.id }}"
+                                    data-remark="{{ lease.remark|default('')|e('html_attr') }}"
+                                    data-return="{{ app.request.uri }}">
+                                {% if lease.remark %}
+                                    <span class="text-body" style="max-width:200px;display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;vertical-align:bottom">{{ lease.remark }}</span>
+                                {% else %}
+                                    <span class="text-muted">{{ 'text.overview.remark.add'|trans }}</span>
+                                {% endif %}
+                            </button>
+                        </td>
+                        <td><code>{{ lease.macAddress }}</code></td>
+                        <td><code>{{ lease.ipAddress }}</code></td>
+                        <td>
+                            {% if lease.ipType == 'fixed' %}
+                                <span class="badge bg-success">{{ 'badge.type.fixed'|trans }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ 'badge.type.dynamic'|trans }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if lease.network %}
+                                <span class="badge bg-info text-dark">{{ lease.network.name }}</span>
+                            {% else %}
+                                <em class="text-muted">–</em>
+                            {% endif %}
+                        </td>
+                        <td class="text-muted text-nowrap">
+                            <small>{{ lease.lastUpdatedAt|date('Y-m-d H:i') }}</small>
+                        </td>
+                        <td class="text-muted text-nowrap">
+                            <small>{{ lease.seenAt|date('Y-m-d H:i') }}</small>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+
+{# Modal: display name #}
+<div class="modal fade" id="nameModal" tabindex="-1" aria-labelledby="nameModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="nameForm" method="post">
+            <input type="hidden" name="_return" id="nameReturn">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="nameModalLabel">{{ 'modal.overview.name.title'|trans }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="custom_name" id="nameInput" class="form-control"
+                           placeholder="{{ 'placeholder.overview.name'|trans }}" maxlength="255">
+                    <div class="form-text">{{ 'text.overview.name.hint'|trans }}</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'button.modal.cancel'|trans }}</button>
+                    <button type="submit" class="btn btn-primary">{{ 'button.modal.save'|trans }}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{# Modal: remark #}
+<div class="modal fade" id="remarkModal" tabindex="-1" aria-labelledby="remarkModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="remarkForm" method="post">
+            <input type="hidden" name="_return" id="remarkReturn">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="remarkModalLabel">{{ 'modal.overview.remark.title'|trans }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <textarea name="remark" id="remarkText" class="form-control" rows="4"
+                              placeholder="{{ 'placeholder.overview.remark'|trans }}"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'button.modal.cancel'|trans }}</button>
+                    <button type="submit" class="btn btn-primary">{{ 'button.modal.save'|trans }}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.getElementById('nameModal').addEventListener('show.bs.modal', function (e) {
+    var btn = e.relatedTarget;
+    document.getElementById('nameInput').value = btn.dataset.customName;
+    document.getElementById('nameReturn').value = btn.dataset.return;
+    document.getElementById('nameForm').action = '/lease/' + btn.dataset.leaseId + '/name';
+});
+document.getElementById('nameModal').addEventListener('shown.bs.modal', function () {
+    var input = document.getElementById('nameInput');
+    input.focus();
+    input.select();
+});
+document.getElementById('remarkModal').addEventListener('show.bs.modal', function (e) {
+    var btn = e.relatedTarget;
+    document.getElementById('remarkText').value = btn.dataset.remark;
+    document.getElementById('remarkReturn').value = btn.dataset.return;
+    document.getElementById('remarkForm').action = '/lease/' + btn.dataset.leaseId + '/remark';
+});
+document.getElementById('remarkModal').addEventListener('shown.bs.modal', function () {
+    document.getElementById('remarkText').focus();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,14 @@
+services:
+  webserver:
+    build: .
+    restart: always
+    environment:
+      - APP_ENV=prod
+      - APP_LOCALE=${APP_LOCALE:-en}
+    volumes:
+      - data:/var/www/html/var/data
+    ports:
+      - "8080:80"
+
+volumes:
+  data:
