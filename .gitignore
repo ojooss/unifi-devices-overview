@@ -2,6 +2,7 @@
 /.idea/
 *.tgz
 *.tgz:Zone.Identifier
+!tests/Fixtures/*.tgz
 .claude/settings.local.json
 /public/assets/
 /var/cache/

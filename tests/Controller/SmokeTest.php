@@ -10,7 +10,7 @@ class SmokeTest extends AbstractControllerTest
         $client->request('GET', '/');
 
         $this->assertResponseIsSuccessful();
-        $this->assertStringContainsString('Geräte-Übersicht', $client->getResponse()->getContent());
+        $this->assertStringContainsString('Device Overview', $client->getResponse()->getContent());
     }
 
     public function testOverviewShowsEmptyStateWithNoData(): void
@@ -19,7 +19,7 @@ class SmokeTest extends AbstractControllerTest
         $client->request('GET', '/');
 
         $this->assertResponseIsSuccessful();
-        $this->assertStringContainsString('Noch keine Daten', $client->getResponse()->getContent());
+        $this->assertStringContainsString('No data available yet.', $client->getResponse()->getContent());
     }
 
     public function testUploadFormLoads(): void
@@ -28,7 +28,7 @@ class SmokeTest extends AbstractControllerTest
         $client->request('GET', '/upload');
 
         $this->assertResponseIsSuccessful();
-        $this->assertStringContainsString('Support-Datei importieren', $client->getResponse()->getContent());
+        $this->assertStringContainsString('Import Support File', $client->getResponse()->getContent());
         $this->assertStringContainsString('<form', $client->getResponse()->getContent());
     }
 
