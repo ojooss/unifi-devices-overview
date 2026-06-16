@@ -63,7 +63,10 @@
         </div>
     </div>
 {% else %}
-    <div class="text-muted small mb-2">{{ 'text.overview.count'|trans({count: leases|length}) }}</div>
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="text-muted small">{{ 'text.overview.count'|trans({count: leases|length}) }}</div>
+        <a href="{{ path('overview_csv', app.request.query.all) }}" class="btn btn-outline-secondary btn-sm">{{ 'button.overview.export_csv'|trans }}</a>
+    </div>
 
     <div class="card shadow-sm">
         <div class="table-responsive">
@@ -78,6 +81,7 @@
                         <th>{{ 'label.overview.table.network'|trans }}</th>
                         <th class="text-muted">{{ 'label.overview.table.updated'|trans }}</th>
                         <th class="text-muted">{{ 'label.overview.table.seen'|trans }}</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -140,6 +144,17 @@
                         <td class="text-muted text-nowrap">
                             <small>{{ lease.seenAt|date('Y-m-d H:i') }}</small>
                         </td>
+                        <td class="text-end pe-3">
+                            <button type="button"
+                                    class="btn btn-outline-danger btn-sm delete-btn"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal"
+                                    data-lease-id="{{ lease.id }}"
+                                    data-lease-name="{{ (lease.customName ?? lease.hostname ?? lease.macAddress)|e('html_attr') }}"
+                                    data-return="{{ app.request.uri }}">
+                                {{ 'button.overview.delete'|trans }}
+                            </button>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -195,6 +210,30 @@
     </div>
 </div>
 
+{# Modal: delete confirmation #}
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="deleteForm" method="post">
+            <input type="hidden" name="_return" id="deleteReturn">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteModalLabel">{{ 'modal.overview.delete.title'|trans }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ 'modal.overview.delete.confirm'|trans }}</p>
+                    <p class="fw-semibold" id="deleteName"></p>
+                    <p class="text-danger mb-0">{{ 'modal.overview.delete.warning'|trans }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'button.modal.cancel'|trans }}</button>
+                    <button type="submit" class="btn btn-danger">{{ 'button.modal.delete'|trans }}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
 document.getElementById('nameModal').addEventListener('show.bs.modal', function (e) {
     var btn = e.relatedTarget;
@@ -215,6 +254,12 @@ document.getElementById('remarkModal').addEventListener('show.bs.modal', functio
 });
 document.getElementById('remarkModal').addEventListener('shown.bs.modal', function () {
     document.getElementById('remarkText').focus();
+});
+document.getElementById('deleteModal').addEventListener('show.bs.modal', function (e) {
+    var btn = e.relatedTarget;
+    document.getElementById('deleteName').textContent = btn.dataset.leaseName;
+    document.getElementById('deleteReturn').value = btn.dataset.return;
+    document.getElementById('deleteForm').action = '/lease/' + btn.dataset.leaseId + '/delete';
 });
 </script>
 {% endblock %}

@@ -133,4 +133,49 @@ class LeaseEditControllerTest extends AbstractControllerTest
         $client->request('GET', '/');
         $this->assertStringContainsString('Sichtbarer Name', $client->getResponse()->getContent());
     }
+
+    public function testDeleteRedirects(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', '/lease/' . $this->leaseId . '/delete', [
+            '_return' => '/',
+        ]);
+
+        $this->assertResponseRedirects('/');
+    }
+
+    public function testDeleteRemovesEntry(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', '/lease/' . $this->leaseId . '/delete', [
+            '_return' => '/',
+        ]);
+
+        $em = static::getContainer()->get('doctrine')->getManager();
+        $em->clear();
+        $this->assertNull($em->find(ClientDevice::class, $this->leaseId));
+    }
+
+    public function testDeleteShowsFlashMessage(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', '/lease/' . $this->leaseId . '/delete', [
+            '_return' => '/',
+        ]);
+        $client->followRedirect();
+
+        $this->assertStringContainsString('Entry deleted successfully', $client->getResponse()->getContent());
+    }
+
+    public function testDeletedEntryGoneFromOverview(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', '/lease/' . $this->leaseId . '/delete', [
+            '_return' => '/',
+        ]);
+        $client->followRedirect();
+
+        $client->request('GET', '/');
+        $this->assertStringNotContainsString('testhost', $client->getResponse()->getContent());
+    }
 }

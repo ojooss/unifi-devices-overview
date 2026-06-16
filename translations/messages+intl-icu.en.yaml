@@ -44,6 +44,9 @@ button.overview.reset_filters: 'Reset filters'
 button.overview.import_empty: 'Import Support File'
 button.modal.cancel: Cancel
 button.modal.save: Save
+button.modal.delete: Delete
+button.overview.delete: Delete
+button.overview.export_csv: 'Download CSV'
 
 # Status badges
 badge.type.fixed: Fixed
@@ -52,6 +55,9 @@ badge.type.dynamic: Dynamic
 # Modal dialog titles
 modal.overview.name.title: 'Edit Display Name'
 modal.overview.remark.title: 'Edit Remark'
+modal.overview.delete.title: 'Delete Entry'
+modal.overview.delete.confirm: 'Do you want to delete the following entry?'
+modal.overview.delete.warning: 'This action cannot be undone.'
 
 # Descriptive texts and hints
 text.overview.count: '{count, plural, =0{No entries found} one{# entry found} other{# entries found}}'
@@ -68,3 +74,4 @@ empty.overview.default: 'No data available yet.'
 # Flash messages
 message.upload.success: '{count, plural, one{# device entry imported successfully.} other{# device entries imported successfully.}}'
 message.upload.error: 'Import error: {error}'
+message.lease.deleted: 'Entry deleted successfully.'
