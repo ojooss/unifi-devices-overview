@@ -16,12 +16,6 @@ class Network
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100)]
-    private string $name;
-
-    #[ORM\Column(length: 50)]
-    private string $subnet;
-
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $dhcpRangeStart = null;
 
@@ -32,10 +26,10 @@ class Network
     #[ORM\OneToMany(targetEntity: ClientDevice::class, mappedBy: 'network')]
     private Collection $clientDevices;
 
-    public function __construct(string $name, string $subnet)
+    public function __construct(#[ORM\Column(length: 100)]
+    private string $name, #[ORM\Column(length: 50)]
+    private string $subnet)
     {
-        $this->name = $name;
-        $this->subnet = $subnet;
         $this->clientDevices = new ArrayCollection();
     }
 

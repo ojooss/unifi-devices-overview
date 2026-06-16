@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClientDeviceRepository::class)]
 #[ORM\UniqueConstraint(name: 'uq_client_device_mac_seen', columns: ['mac_address', 'seen_at'])]
-#[ORM\Index(columns: ['seen_at'], name: 'idx_seen_at')]
-#[ORM\Index(columns: ['network_id'], name: 'idx_network')]
+#[ORM\Index(name: 'idx_seen_at', columns: ['seen_at'])]
+#[ORM\Index(name: 'idx_network', columns: ['network_id'])]
 class ClientDevice
 {
     #[ORM\Id]
@@ -19,9 +19,6 @@ class ClientDevice
     #[ORM\ManyToOne(targetEntity: Network::class, inversedBy: 'clientDevices')]
     #[ORM\JoinColumn(nullable: true)]
     private ?Network $network = null;
-
-    #[ORM\Column(length: 17)]
-    private string $macAddress;
 
     #[ORM\Column(length: 15)]
     private string $ipAddress = '';
@@ -36,10 +33,6 @@ class ClientDevice
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $leaseExpiresAt = null;
 
-    /** Timestamp aus Support-Dateiname */
-    #[ORM\Column]
-    private \DateTimeImmutable $seenAt;
-
     /** Zeitpunkt des letzten Imports */
     #[ORM\Column]
     private \DateTimeImmutable $lastUpdatedAt;
@@ -53,10 +46,12 @@ class ClientDevice
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $unifiAlias = null;
 
-    public function __construct(string $macAddress, \DateTimeImmutable $seenAt)
-    {
-        $this->macAddress = $macAddress;
-        $this->seenAt = $seenAt;
+    public function __construct(
+        #[ORM\Column(length: 17)]
+        private string $macAddress, /** Timestamp aus Support-Dateiname */
+        #[ORM\Column]
+        private \DateTimeImmutable $seenAt
+    ) {
         $this->lastUpdatedAt = new \DateTimeImmutable();
     }
 

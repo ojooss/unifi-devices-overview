@@ -23,7 +23,7 @@ class DnsmasqLeaseParserTest extends TestCase
         $this->assertSame('192.168.1.50', $leases[0]['ip']);
         $this->assertSame('my-host', $leases[0]['hostname']);
         $this->assertInstanceOf(\DateTimeImmutable::class, $leases[0]['leaseExpiresAt']);
-        $this->assertSame(1781513821, (int) $leases[0]['leaseExpiresAt']->getTimestamp());
+        $this->assertSame(1781513821, $leases[0]['leaseExpiresAt']->getTimestamp());
     }
 
     public function testWildcardHostnameBecomesNull(): void

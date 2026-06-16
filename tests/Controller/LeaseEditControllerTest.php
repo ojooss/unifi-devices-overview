@@ -47,7 +47,7 @@ class LeaseEditControllerTest extends AbstractControllerTest
     public function testEmptyRemarkClearsExistingValue(): void
     {
         // Vorher setzen
-        $kernel = static::bootKernel();
+        static::bootKernel();
         $em = static::getContainer()->get('doctrine')->getManager();
         $em->find(ClientDevice::class, $this->leaseId)->setRemark('alt');
         $em->flush();
@@ -92,7 +92,7 @@ class LeaseEditControllerTest extends AbstractControllerTest
 
     public function testEmptyCustomNameClearsExistingValue(): void
     {
-        $kernel = static::bootKernel();
+        static::bootKernel();
         $em = static::getContainer()->get('doctrine')->getManager();
         $em->find(ClientDevice::class, $this->leaseId)->setCustomName('alt');
         $em->flush();

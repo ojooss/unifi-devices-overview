@@ -61,7 +61,7 @@ class SupportFileParser
                 $path = $fileInfo->getPathname();
                 $filename = $fileInfo->getFilename();
 
-                if (preg_match('/^dhcp\.dhcpServers-(.+)\.conf$/', $filename, $m)) {
+                if (preg_match('/^dhcp\.dhcpServers-(.+)\.conf$/', (string) $filename, $m)) {
                     $result = $this->dhcpConfigParser->parse(
                         file_get_contents($path),
                         $m[1]
@@ -81,11 +81,11 @@ class SupportFileParser
                     continue;
                 }
 
-                if ($filename === 'dnsmasq.lease' && str_contains($path, 'udapi-config')) {
+                if ($filename === 'dnsmasq.lease' && str_contains((string) $path, 'udapi-config')) {
                     $leaseContent = file_get_contents($path);
                 }
 
-                if ($filename === 'topology.json' && str_contains($path, '/unifi/')) {
+                if ($filename === 'topology.json' && str_contains((string) $path, '/unifi/')) {
                     $topologyContent = file_get_contents($path);
                 }
             }
