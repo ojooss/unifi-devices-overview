@@ -20,6 +20,24 @@ docker run --rm unifi-overview-test
 
 Service/Entity tests: pure unit tests, no DB. Controller tests create a real SQLite schema via `SchemaTool`.
 
+## Quality Gate
+
+After every change, all three must pass before considering the task done:
+
+```bash
+# 1. rebuild image to pick up changes
+docker build --target tester -t unifi-overview-test .
+
+# 2. tests
+docker run --rm unifi-overview-test
+
+# 3. Rector (should report 0 changes)
+docker run --rm -v $(pwd)/rector.php:/var/www/html/rector.php -v $(pwd)/src:/var/www/html/src -v $(pwd)/tests:/var/www/html/tests unifi-overview-test vendor/bin/rector process --dry-run
+
+# 4. CodeSniffer (no output = clean; run phpcbf to auto-fix)
+docker run --rm unifi-overview-test vendor/bin/phpcs
+```
+
 ## Add a Migration
 
 ```bash
