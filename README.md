@@ -19,6 +19,35 @@ All data is stored locally in a SQLite database inside a Docker volume — nothi
 
 ## Installation
 
+### Option A — Docker Hub (recommended)
+
+Create a `docker-compose.yml` with the following content:
+
+```yaml
+services:
+  webserver:
+    image: ojooss/unifi-devices-overview:latest
+    restart: always
+    environment:
+      - APP_SECRET=replace_this_with_a_random_32char_string
+      - APP_LOCALE=en
+    volumes:
+      - data:/var/www/html/var/data
+    ports:
+      - "8080:80"
+
+volumes:
+  data:
+```
+
+Then start the application:
+
+```bash
+docker compose up -d
+```
+
+### Option B — build from source
+
 ```bash
 git clone https://github.com/your-user/unifi-overview.git
 cd unifi-overview
@@ -37,7 +66,11 @@ Then start the application:
 docker compose up -d
 ```
 
-The first start builds the Docker image and creates the database automatically. Open **http://localhost:8080** once the container is running.
+The first start builds the Docker image and creates the database automatically.
+
+---
+
+Open **http://localhost:8080** once the container is running.
 
 ## Getting a support file from your UniFi Dream Machine
 
