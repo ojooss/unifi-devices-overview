@@ -1,5 +1,6 @@
 {
     "name": "ojooss/unifi-overview",
+    "version": "1.0.0",
     "description": "UniFi Support File Network Overview",
     "type": "project",
     "license": "proprietary",
