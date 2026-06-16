@@ -12,7 +12,7 @@
                 {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'novalidate': 'novalidate'}}) }}
                     <div class="mb-3">
                         {{ form_label(form.file, null, {'label_attr': {'class': 'form-label fw-semibold'}}) }}
-                        {{ form_widget(form.file, {'attr': {'class': 'form-control form-control-lg'}}) }}
+                        {{ form_widget(form.file, {'attr': {'class': 'form-control-lg'}}) }}
                         {{ form_errors(form.file) }}
                         <div class="form-text">{{ 'text.upload.file.hint'|trans|raw }}</div>
                     </div>

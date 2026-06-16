@@ -2,11 +2,13 @@
 
 namespace App\Tests\Service;
 
+use App\Entity\ClientDevice;
 use App\Repository\ClientDeviceRepository;
 use App\Repository\NetworkRepository;
 use App\Service\DhcpConfigParser;
 use App\Service\DnsmasqLeaseParser;
 use App\Service\SupportFileParser;
+use App\Service\TopologyParser;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -22,7 +24,14 @@ class SupportFileParserTest extends TestCase
         $networkRepo->method('findOneBy')->willReturn(null);
         $leaseRepo->method('findOneBy')->willReturn(null);
 
-        return new SupportFileParser($em, $networkRepo, $leaseRepo, new DhcpConfigParser(), new DnsmasqLeaseParser());
+        return new SupportFileParser(
+            $em,
+            $networkRepo,
+            $leaseRepo,
+            new DhcpConfigParser(),
+            new DnsmasqLeaseParser(),
+            new TopologyParser()
+        );
     }
 
     /** @return array{UploadedFile, string} */
@@ -65,7 +74,8 @@ class SupportFileParserTest extends TestCase
             $networkRepo,
             $leaseRepo,
             new DhcpConfigParser(),
-            new DnsmasqLeaseParser()
+            new DnsmasqLeaseParser(),
+            new TopologyParser()
         );
 
         [$file, $tmpPath] = $this->makeUploadedFile('support-test-1000000000000.tgz');
@@ -89,6 +99,54 @@ class SupportFileParserTest extends TestCase
         } finally {
             @unlink($tmpPath);
         }
+    }
+
+    public function testUnifiAliasIsSetFromTopologyJson(): void
+    {
+        $em = $this->createStub(EntityManagerInterface::class);
+        $networkRepo = $this->createStub(NetworkRepository::class);
+        $leaseRepo = $this->createStub(ClientDeviceRepository::class);
+
+        $networkRepo->method('findOneBy')->willReturn(null);
+
+        $persistedDevices = [];
+        $leaseRepo->method('findOneBy')->willReturn(null);
+
+        $em->method('persist')->willReturnCallback(function (object $entity) use (&$persistedDevices): void {
+            if ($entity instanceof ClientDevice) {
+                $persistedDevices[] = $entity;
+            }
+        });
+
+        $parser = new SupportFileParser(
+            $em,
+            $networkRepo,
+            $leaseRepo,
+            new DhcpConfigParser(),
+            new DnsmasqLeaseParser(),
+            new TopologyParser()
+        );
+
+        [$file, $tmpPath] = $this->makeUploadedFile('support-test-1000000000000.tgz');
+
+        try {
+            $parser->parse($file);
+        } finally {
+            @unlink($tmpPath);
+        }
+
+        // fixture topology.json maps aa:bb:cc:dd:ee:ff → "Test Printer"
+        $byMac = [];
+        foreach ($persistedDevices as $d) {
+            $byMac[$d->getMacAddress()] = $d;
+        }
+
+        $this->assertArrayHasKey('aa:bb:cc:dd:ee:ff', $byMac);
+        $this->assertSame('Test Printer', $byMac['aa:bb:cc:dd:ee:ff']->getUnifiAlias());
+
+        // second device is also in topology.json → alias is set
+        $this->assertArrayHasKey('11:22:33:44:55:66', $byMac);
+        $this->assertSame('Smart TV', $byMac['11:22:33:44:55:66']->getUnifiAlias());
     }
 
     public function testTempFileWithoutExtensionIsParsedCorrectly(): void

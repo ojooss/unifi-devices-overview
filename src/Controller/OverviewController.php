@@ -51,12 +51,13 @@ class OverviewController extends AbstractController
 
         $out = fopen('php://temp', 'w+');
         fputcsv($out, [
-            'Name', 'Hostname', 'MAC Address', 'IP Address',
+            'Name', 'UniFi Alias', 'Hostname', 'MAC Address', 'IP Address',
             'Type', 'Network', 'Last Updated', 'Seen At', 'Remark',
         ], escape: '');
         foreach ($leases as $lease) {
             fputcsv($out, [
                 $lease->getCustomName() ?? '',
+                $lease->getUnifiAlias() ?? '',
                 $lease->getHostname() ?? '',
                 $lease->getMacAddress(),
                 $lease->getIpAddress(),

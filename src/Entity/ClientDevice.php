@@ -50,6 +50,9 @@ class ClientDevice
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $remark = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $unifiAlias = null;
+
     public function __construct(string $macAddress, \DateTimeImmutable $seenAt)
     {
         $this->macAddress = $macAddress;
@@ -64,6 +67,7 @@ class ClientDevice
         string $ipType,
         ?\DateTimeImmutable $leaseExpiresAt,
         \DateTimeImmutable $now,
+        ?string $unifiAlias = null,
     ): void {
         $this->network = $network;
         $this->ipAddress = $ipAddress;
@@ -71,6 +75,7 @@ class ClientDevice
         $this->ipType = $ipType;
         $this->leaseExpiresAt = $leaseExpiresAt;
         $this->lastUpdatedAt = $now;
+        $this->unifiAlias = $unifiAlias;
     }
 
     public function getId(): ?int
@@ -136,5 +141,10 @@ class ClientDevice
     public function setRemark(?string $remark): void
     {
         $this->remark = $remark;
+    }
+
+    public function getUnifiAlias(): ?string
+    {
+        return $this->unifiAlias;
     }
 }

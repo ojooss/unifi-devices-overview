@@ -17,6 +17,7 @@ class SupportFileParser
         private readonly ClientDeviceRepository $leaseRepository,
         private readonly DhcpConfigParser $dhcpConfigParser,
         private readonly DnsmasqLeaseParser $leaseParser,
+        private readonly TopologyParser $topologyParser,
     ) {
     }
 
@@ -40,6 +41,7 @@ class SupportFileParser
         $networks = [];
         $fixedMacs = [];
         $leaseContent = null;
+        $topologyContent = null;
 
         try {
             exec('tar -xzf ' . escapeshellarg($tmpPath) . ' -C ' . escapeshellarg($tmpDir) . ' 2>&1', $output, $code);
@@ -82,6 +84,10 @@ class SupportFileParser
                 if ($filename === 'dnsmasq.lease' && str_contains($path, 'udapi-config')) {
                     $leaseContent = file_get_contents($path);
                 }
+
+                if ($filename === 'topology.json' && str_contains($path, '/unifi/')) {
+                    $topologyContent = file_get_contents($path);
+                }
             }
         } finally {
             @unlink($tmpPath);
@@ -93,6 +99,8 @@ class SupportFileParser
         if ($leaseContent === null) {
             throw new \RuntimeException('No dnsmasq.lease file found in the support archive.');
         }
+
+        $aliases = $topologyContent !== null ? $this->topologyParser->parse($topologyContent) : [];
 
         $count = 0;
         $leases = $this->leaseParser->parse($leaseContent);
@@ -113,6 +121,7 @@ class SupportFileParser
                 $ipType,
                 $lease['leaseExpiresAt'],
                 $now,
+                $aliases[strtolower($lease['mac'])] ?? null,
             );
             $this->em->persist($clientDevice);
             $count++;

@@ -11,7 +11,7 @@ class CsvExportControllerTest extends AbstractControllerTest
     {
         $device = new ClientDevice('aa:bb:cc:dd:ee:ff', new \DateTimeImmutable('2024-01-01 00:00:00'));
         $now = new \DateTimeImmutable('2024-06-01 12:00:00');
-        $device->update(null, '192.168.1.100', 'testhost', 'dynamic', null, $now);
+        $device->update(null, '192.168.1.100', 'testhost', 'dynamic', null, $now, 'Drucker Büro');
         $device->setCustomName('My Device');
         $device->setRemark('some remark');
         $em->persist($device);
@@ -41,6 +41,7 @@ class CsvExportControllerTest extends AbstractControllerTest
         $this->assertStringContainsString('MAC Address', $content);
         $this->assertStringContainsString('IP Address', $content);
         $this->assertStringContainsString('Hostname', $content);
+        $this->assertStringContainsString('UniFi Alias', $content);
     }
 
     public function testCsvContainsDeviceData(): void
@@ -52,6 +53,7 @@ class CsvExportControllerTest extends AbstractControllerTest
         $this->assertStringContainsString('aa:bb:cc:dd:ee:ff', $content);
         $this->assertStringContainsString('192.168.1.100', $content);
         $this->assertStringContainsString('My Device', $content);
+        $this->assertStringContainsString('Drucker Büro', $content);
         $this->assertStringContainsString('some remark', $content);
         $this->assertStringContainsString('11:22:33:44:55:66', $content);
     }

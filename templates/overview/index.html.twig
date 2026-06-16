@@ -97,6 +97,11 @@
                                     data-return="{{ app.request.uri }}">
                                 {% if lease.customName %}
                                     <span class="fw-semibold text-body">{{ lease.customName }}</span>
+                                    {% if lease.unifiAlias or lease.hostname %}
+                                        <br><small class="text-muted fw-normal">{{ lease.unifiAlias ?? lease.hostname }}</small>
+                                    {% endif %}
+                                {% elseif lease.unifiAlias %}
+                                    <span class="text-body">{{ lease.unifiAlias }}</span>
                                     {% if lease.hostname %}
                                         <br><small class="text-muted fw-normal">{{ lease.hostname }}</small>
                                     {% endif %}
@@ -150,7 +155,7 @@
                                     data-bs-toggle="modal"
                                     data-bs-target="#deleteModal"
                                     data-lease-id="{{ lease.id }}"
-                                    data-lease-name="{{ (lease.customName ?? lease.hostname ?? lease.macAddress)|e('html_attr') }}"
+                                    data-lease-name="{{ (lease.customName ?? lease.unifiAlias ?? lease.hostname ?? lease.macAddress)|e('html_attr') }}"
                                     data-return="{{ app.request.uri }}">
                                 {{ 'button.overview.delete'|trans }}
                             </button>
