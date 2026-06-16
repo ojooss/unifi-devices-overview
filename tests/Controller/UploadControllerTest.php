@@ -46,15 +46,16 @@ class UploadControllerTest extends AbstractControllerTest
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertStringContainsString('Import error', $client->getResponse()->getContent());
+        $this->assertStringContainsString('Import failed', $client->getResponse()->getContent());
     }
 
-    public function testUploadWithoutFileShowsForm(): void
+    public function testUploadWithoutFileShowsValidationError(): void
     {
         $client = static::createClient();
         $client->request('POST', '/upload', ['upload' => ['submit' => '']]);
 
-        $this->assertResponseIsSuccessful();
+        $this->assertResponseStatusCodeSame(422);
+        $this->assertStringContainsString('Please select a file', $client->getResponse()->getContent());
         $this->assertStringNotContainsString('imported successfully', $client->getResponse()->getContent());
     }
 }

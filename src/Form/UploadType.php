@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /** @extends AbstractType<array<string, mixed>> */
 class UploadType extends AbstractType
@@ -19,6 +20,7 @@ class UploadType extends AbstractType
                 'label' => 'label.upload.file',
                 'attr' => ['accept' => '.tgz,.tar.gz'],
                 'constraints' => [
+                    new NotNull(message: 'error.upload.file.required'),
                     new File(maxSize: '100M'),
                 ],
             ])

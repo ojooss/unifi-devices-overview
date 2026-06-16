@@ -73,5 +73,6 @@ empty.overview.default: 'Noch keine Daten vorhanden.'
 
 # Flash-Meldungen
 message.upload.success: '{count, plural, one{# Geräteeintrag erfolgreich importiert.} other{# Geräteeinträge erfolgreich importiert.}}'
-message.upload.error: 'Fehler beim Import: {error}'
+message.upload.error: 'Import fehlgeschlagen: {error}'
+message.upload.error.generic: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.'
 message.lease.deleted: 'Eintrag erfolgreich gelöscht.'

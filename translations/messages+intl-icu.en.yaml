@@ -73,5 +73,6 @@ empty.overview.default: 'No data available yet.'
 
 # Flash messages
 message.upload.success: '{count, plural, one{# device entry imported successfully.} other{# device entries imported successfully.}}'
-message.upload.error: 'Import error: {error}'
+message.upload.error: 'Import failed: {error}'
+message.upload.error.generic: 'An unexpected error occurred. Please try again.'
 message.lease.deleted: 'Entry deleted successfully.'

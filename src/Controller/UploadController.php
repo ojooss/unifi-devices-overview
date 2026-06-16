@@ -30,13 +30,20 @@ class UploadController extends AbstractController
                 $this->addFlash('success', $translator->trans('message.upload.success', ['count' => $count]));
 
                 return $this->redirectToRoute('overview');
-            } catch (\Throwable $e) {
+            } catch (\RuntimeException $e) {
                 $logger->error('Import failed: {message}', [
                     'message' => $e->getMessage(),
                     'exception' => $e,
                     'file' => $form->get('file')->getData()?->getClientOriginalName(),
                 ]);
                 $this->addFlash('danger', $translator->trans('message.upload.error', ['error' => $e->getMessage()]));
+            } catch (\Throwable $e) {
+                $logger->error('Unexpected import error: {message}', [
+                    'message' => $e->getMessage(),
+                    'exception' => $e,
+                    'file' => $form->get('file')->getData()?->getClientOriginalName(),
+                ]);
+                $this->addFlash('danger', $translator->trans('message.upload.error.generic'));
             }
         }
 
