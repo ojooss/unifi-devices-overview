@@ -30,7 +30,7 @@ class DhcpConfigParser
             $hosts
         );
         $fixedMacs = [];
-        if (isset($hosts[1]) && $hosts[1] !== []) {
+        if ($hosts[1] !== []) {
             $fixedMacs = array_combine(
                 array_map(strtolower(...), $hosts[1]),
                 $hosts[2]
