@@ -7,9 +7,11 @@ on:
   pull_request:
     branches: ["**"]
 
+# Group by ref so that branch/PR runs are cancelled when a newer commit arrives,
+# but tag runs are never cancelled — losing a tag run would skip the Docker publish.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.sha }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
 jobs:
   test:
@@ -22,6 +24,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # Build only the tester stage — production image is built in the publish job
       - name: Build tester image
         uses: docker/build-push-action@v6
         with:
@@ -38,6 +41,7 @@ jobs:
   publish:
     name: Push to Docker Hub
     needs: test
+    # Only publish on tag pushes — not on branch pushes or pull requests
     if: startsWith(github.ref, 'refs/tags/') && github.event_name == 'push'
     runs-on: ubuntu-latest
 
@@ -53,6 +57,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # Derives tags: the git tag name (e.g. "1.1.1") and "latest"
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
@@ -73,6 +78,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      # Updates the Docker Hub repository description from README.md
       - name: Update Docker Hub description
         uses: peter-evans/dockerhub-description@v4
         with:
