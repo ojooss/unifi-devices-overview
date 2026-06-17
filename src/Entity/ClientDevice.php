@@ -6,7 +6,7 @@ use App\Repository\ClientDeviceRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClientDeviceRepository::class)]
-#[ORM\UniqueConstraint(name: 'uq_client_device_mac_seen', columns: ['mac_address', 'seen_at'])]
+#[ORM\UniqueConstraint(name: 'uq_client_device_mac', columns: ['mac_address'])]
 #[ORM\Index(name: 'idx_seen_at', columns: ['seen_at'])]
 #[ORM\Index(name: 'idx_network', columns: ['network_id'])]
 class ClientDevice
@@ -62,6 +62,7 @@ class ClientDevice
         string $ipType,
         ?\DateTimeImmutable $leaseExpiresAt,
         \DateTimeImmutable $now,
+        \DateTimeImmutable $seenAt,
         ?string $unifiAlias = null,
     ): void {
         $this->network = $network;
@@ -70,6 +71,7 @@ class ClientDevice
         $this->ipType = $ipType;
         $this->leaseExpiresAt = $leaseExpiresAt;
         $this->lastUpdatedAt = $now;
+        $this->seenAt = $seenAt;
         $this->unifiAlias = $unifiAlias;
     }
 

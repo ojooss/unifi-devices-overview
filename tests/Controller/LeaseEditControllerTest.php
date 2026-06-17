@@ -12,7 +12,15 @@ class LeaseEditControllerTest extends AbstractControllerTest
     protected function loadFixtures(EntityManagerInterface $em): void
     {
         $lease = new ClientDevice('aa:bb:cc:dd:ee:ff', new \DateTimeImmutable('2024-01-01 00:00:00'));
-        $lease->update(null, '192.168.1.100', 'testhost', 'dynamic', null, new \DateTimeImmutable());
+        $lease->update(
+            null,
+            '192.168.1.100',
+            'testhost',
+            'dynamic',
+            null,
+            new \DateTimeImmutable(),
+            new \DateTimeImmutable()
+        );
         $em->persist($lease);
         $em->flush();
         $this->leaseId = $lease->getId();

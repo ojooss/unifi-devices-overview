@@ -111,7 +111,6 @@ class SupportFileParser
 
             $clientDevice = $this->leaseRepository->findOneBy([
                 'macAddress' => $lease['mac'],
-                'seenAt' => $capturedAt,
             ]) ?? new ClientDevice($lease['mac'], $capturedAt);
 
             $clientDevice->update(
@@ -121,6 +120,7 @@ class SupportFileParser
                 $ipType,
                 $lease['leaseExpiresAt'],
                 $now,
+                $capturedAt,
                 $aliases[strtolower($lease['mac'])] ?? null,
             );
             $this->em->persist($clientDevice);

@@ -33,8 +33,9 @@ class ClientDeviceTest extends TestCase
         $network = new Network('LAN', '192.168.1.0/24');
         $expiresAt = new \DateTimeImmutable('2024-12-31');
         $now = new \DateTimeImmutable('2024-06-01');
+        $seenAt = new \DateTimeImmutable('2024-05-01');
 
-        $device->update($network, '192.168.1.100', 'myhost', 'fixed', $expiresAt, $now);
+        $device->update($network, '192.168.1.100', 'myhost', 'fixed', $expiresAt, $now, $seenAt);
 
         $this->assertSame($network, $device->getNetwork());
         $this->assertSame('192.168.1.100', $device->getIpAddress());
@@ -42,12 +43,13 @@ class ClientDeviceTest extends TestCase
         $this->assertSame('fixed', $device->getIpType());
         $this->assertSame($expiresAt, $device->getLeaseExpiresAt());
         $this->assertSame($now, $device->getLastUpdatedAt());
+        $this->assertSame($seenAt, $device->getSeenAt());
     }
 
     public function testUpdateAcceptsNullableValues(): void
     {
         $device = new ClientDevice('aa:bb:cc:dd:ee:ff', new \DateTimeImmutable());
-        $device->update(null, '10.0.0.1', null, 'dynamic', null, new \DateTimeImmutable());
+        $device->update(null, '10.0.0.1', null, 'dynamic', null, new \DateTimeImmutable(), new \DateTimeImmutable());
 
         $this->assertNull($device->getNetwork());
         $this->assertNull($device->getHostname());
@@ -60,7 +62,7 @@ class ClientDeviceTest extends TestCase
         $device->setRemark('Im Schrank');
         $device->setCustomName('Mein NAS');
 
-        $device->update(null, '10.0.0.2', 'nas', 'fixed', null, new \DateTimeImmutable());
+        $device->update(null, '10.0.0.2', 'nas', 'fixed', null, new \DateTimeImmutable(), new \DateTimeImmutable());
 
         $this->assertSame('Im Schrank', $device->getRemark());
         $this->assertSame('Mein NAS', $device->getCustomName());

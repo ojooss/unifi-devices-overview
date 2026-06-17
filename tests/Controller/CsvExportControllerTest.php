@@ -11,13 +11,30 @@ class CsvExportControllerTest extends AbstractControllerTest
     {
         $device = new ClientDevice('aa:bb:cc:dd:ee:ff', new \DateTimeImmutable('2024-01-01 00:00:00'));
         $now = new \DateTimeImmutable('2024-06-01 12:00:00');
-        $device->update(null, '192.168.1.100', 'testhost', 'dynamic', null, $now, 'Drucker Büro');
+        $device->update(
+            null,
+            '192.168.1.100',
+            'testhost',
+            'dynamic',
+            null,
+            $now,
+            new \DateTimeImmutable('2024-01-01 00:00:00'),
+            'Drucker Büro'
+        );
         $device->setCustomName('My Device');
         $device->setRemark('some remark');
         $em->persist($device);
 
         $device2 = new ClientDevice('11:22:33:44:55:66', new \DateTimeImmutable('2024-01-01 00:00:00'));
-        $device2->update(null, '10.0.0.5', 'fixedhost', 'fixed', null, new \DateTimeImmutable('2024-06-01 12:00:00'));
+        $device2->update(
+            null,
+            '10.0.0.5',
+            'fixedhost',
+            'fixed',
+            null,
+            new \DateTimeImmutable('2024-06-01 12:00:00'),
+            new \DateTimeImmutable('2024-01-01 00:00:00')
+        );
         $em->persist($device2);
     }
 
