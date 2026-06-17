@@ -155,3 +155,30 @@ docker compose up --build -d
 ```
 
 The container automatically runs any pending database migrations on startup.
+
+## Release Notes
+
+### 1.1.2 — 2026-06-17
+
+- **Fixed:** Uniqueness of device records is now enforced on MAC address only — a device that appears on multiple networks or is re-imported no longer creates duplicate entries.
+
+### 1.1.1 — 2026-06-17
+
+- **Fixed:** Timestamps in the *Last Updated* and *Last Seen* columns are now displayed at full contrast (previously rendered in muted/grey text).
+
+### 1.1.0 — 2026-06-16
+
+- **New:** Device aliases from the UniFi network topology are now imported and shown in the overview table, giving human-readable names to devices that report no hostname.
+- **Improved:** File upload validation now shows clear, translated error messages when a file is missing, of the wrong type, or too large.
+- **Improved:** Upload form renders with Bootstrap 5 styling for a consistent look.
+
+### 1.0.0 — 2026-06-16
+
+Initial public release.
+
+- Import UniFi Dream Machine support archives (`.tgz`) via a simple upload form.
+- Overview table showing hostname, MAC address, IP address, IP type (fixed/dynamic), network, and timestamps.
+- Inline editing of a custom display name and free-text remark per device.
+- Filter by network, IP type, and free-text search across hostname and MAC address.
+- CSV export of the current filtered table view.
+- English and German UI language support (`APP_LOCALE=en` / `APP_LOCALE=de`).
