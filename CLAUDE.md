@@ -35,6 +35,21 @@ docker run --rm unifi-overview-test
 docker run --rm -v $(pwd)/rector.php:/var/www/html/rector.php -v $(pwd)/src:/var/www/html/src -v $(pwd)/tests:/var/www/html/tests unifi-overview-test vendor/bin/rector process --dry-run
 ```
 
+## Release
+
+1. Bump `"version"` in `composer.json` to the new semver (e.g. `1.1.3`).
+2. Add a new section to the `## Release Notes` block in `README.md` (format: `### 1.1.3 — YYYY-MM-DD` followed by bullet points).
+3. Commit: `Version 1.1.3`.
+4. Push the commit, then create and push a git tag:
+   ```bash
+   git tag 1.1.3
+   git push origin master
+   git push origin 1.1.3
+   ```
+
+CI triggers on the tag push: runs tests, builds the production image, pushes it to Docker Hub as both `<tag>` and `latest`, 
+and updates the Docker Hub description from `README.md`.
+
 ## Add a Migration
 
 ```bash
