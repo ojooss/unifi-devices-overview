@@ -158,6 +158,11 @@ The container automatically runs any pending database migrations on startup.
 
 ## Release Notes
 
+### 1.2.0 — 2026-07-05
+
+- **Improved:** Remark field is now included in the free-text search filter (alongside hostname and MAC address).
+- **Improved:** GitHub Actions workflow refined — conditional Docker Hub publishing and metadata updates, better concurrency control.
+
 ### 1.1.2 — 2026-06-17
 
 - **Fixed:** Uniqueness of device records is now enforced on MAC address only — a device that appears on multiple networks or is re-imported no longer creates duplicate entries.
