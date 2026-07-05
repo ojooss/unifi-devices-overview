@@ -34,7 +34,10 @@ class ClientDeviceRepository extends ServiceEntityRepository
         }
 
         if (!empty($filters['search'])) {
-            $qb->andWhere('d.hostname LIKE :search OR d.macAddress LIKE :search OR d.customName LIKE :search')
+            $qb->andWhere(
+                'd.hostname LIKE :search OR d.macAddress LIKE :search' .
+                ' OR d.customName LIKE :search OR d.remark LIKE :search'
+            )
                 ->setParameter('search', '%' . $filters['search'] . '%');
         }
 
