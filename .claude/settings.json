@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bin/dx *)",
+      "Bash(bash .quality/gate-full.sh*)",
+      "Bash(git status*)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git checkout *)",
+      "Bash(git branch *)",
+      "Bash(git stash*)",
+      "Bash(docker build *)",
+      "Bash(docker run *)",
+      "Bash(find *)",
+      "Bash(ls*)",
+      "Bash(gh pr *)",
+      "Bash(gh issue *)",
+      "Bash(gh run *)"
+    ],
+    "deny": [
+      "Bash(git commit*--no-verify*)",
+      "Bash(git push*--force*)",
+      "Bash(git push origin master*)"
+    ]
+  }
+}

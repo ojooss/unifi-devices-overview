@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+CHANGED=$(git diff --cached --name-only --diff-filter=ACM | grep '\.php$' || true)
+[ -z "$CHANGED" ] && exit 0
+
+if ! docker image inspect unifi-overview-test >/dev/null 2>&1; then
+    echo "[pre-commit] Tester image not found — skipping phpcs. Run: bash .quality/gate-full.sh"
+    exit 0
+fi
+
+echo "[pre-commit] phpcs on staged PHP files..."
+docker run --rm \
+    -v "$(pwd)/src:/var/www/html/src:ro" \
+    -v "$(pwd)/tests:/var/www/html/tests:ro" \
+    -v "$(pwd)/phpcs.xml:/var/www/html/phpcs.xml:ro" \
+    --entrypoint "" \
+    unifi-overview-test \
+    vendor/bin/phpcs $CHANGED

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -e
+
+echo "[pre-push] Running full quality gate..."
+bash "$(git rev-parse --show-toplevel)/.quality/gate-full.sh"

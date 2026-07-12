@@ -156,6 +156,66 @@ docker compose up --build -d
 
 The container automatically runs any pending database migrations on startup.
 
+## Contributing / Development
+
+### Prerequisites
+
+- Docker with Compose plugin
+- Git
+- [Claude Code](https://claude.ai/code) — optional, for local agent work
+
+### Setup after cloning
+
+```bash
+# 1. Start the app
+docker compose up --build -d
+
+# 2. Activate Git hooks (once — enforces the quality gate before every commit and push)
+git config core.hooksPath .githooks
+```
+
+That's it. The hooks and `.claude/settings.json` are versioned — no further configuration needed.
+
+### Quality gate
+
+Run the full gate manually at any time:
+
+```bash
+bash .quality/gate-full.sh
+```
+
+Builds the test image and runs phpcs, phpstan, phpunit, and Rector in one go.
+All checks must pass before a PR can be merged.
+
+### Working with Claude Code
+
+**In GitHub (no local setup needed):**
+Mention `@claude` in any issue or PR comment — Claude Code will pick up the task,
+implement it on a feature branch, run the quality gate, and open a pull request automatically.
+
+**Locally:**
+
+```bash
+claude   # interactive mode, reads AGENTS.md automatically
+```
+
+For autonomous single-task runs:
+
+```bash
+claude --permission-mode acceptEdits -p "Implement issue #42. Follow AGENTS.md. Gate must be green before done."
+```
+
+### GitHub Action secrets
+
+The `@claude` workflow requires one secret in the repository settings
+(**Settings → Secrets and variables → Actions → New repository secret**):
+
+| Secret | Value |
+|---|---|
+| `CLAUDE_CODE_OAUTH_TOKEN` | Generate at [claude.ai](https://claude.ai) → Settings → Claude Code → OAuth Tokens → Create new token |
+
+---
+
 ## Release Notes
 
 ### 1.2.0 — 2026-07-05

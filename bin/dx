@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -e
+
+# If already inside the container, run directly
+if [ -f /.dockerenv ]; then
+    exec "$@"
+fi
+
+exec docker compose exec webserver "$@"
