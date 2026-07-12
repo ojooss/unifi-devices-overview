@@ -66,6 +66,11 @@ text.overview.name.hint: 'Leave empty to use the original hostname.'
 text.upload.file.hint: 'UniFi UDM support files in <code>.tgz</code> format, max. 100 MB'
 text.upload.note.label: 'Note:'
 text.upload.note.body: 'The support file is parsed and network and device data are stored in the database. The timestamp encoded in the filename is used as the capture time.'
+text.upload.help.toggle: 'How do I export data from my UniFi device?'
+text.upload.help.title: 'Getting a support file from your UniFi Dream Machine'
+text.upload.help.step1: "Log in to your UniFi Dream Machine's management interface."
+text.upload.help.step2: 'Go to Settings → System → Support File.'
+text.upload.help.step3: 'Click Download Support File — this produces a .tgz archive.'
 
 # Empty states
 empty.overview.filtered: 'No entries found for the selected filters.'
