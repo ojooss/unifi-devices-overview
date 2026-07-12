@@ -39,7 +39,7 @@ jobs:
           additional_permissions: |
             actions: read
 
-          claude_args: "--permission-mode dontAsk"
+          claude_args: "--permission-mode bypassPermissions"
 
           system_prompt: |
             You are implementing tasks for the unifi-overview project.
