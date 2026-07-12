@@ -218,6 +218,10 @@ The `@claude` workflow requires one secret in the repository settings
 
 ## Release Notes
 
+### 1.3.0 — 2026-07-12
+
+- **New:** Quick-help section on the upload page explains how to export a UniFi support file from the UniFi OS console.
+
 ### 1.2.0 — 2026-07-05
 
 - **Improved:** Remark field is now included in the free-text search filter (alongside hostname and MAC address).
