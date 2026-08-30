@@ -92,7 +92,7 @@ class SupportFileParserTest extends TestCase
         [$file, $tmpPath] = $this->makeUploadedFile('support-nolease-2000000000000.tgz');
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('No dnsmasq.lease file found');
+        $this->expectExceptionMessageIsOrContains('No dnsmasq.lease file found');
 
         try {
             $this->makeParser()->parse($file);
