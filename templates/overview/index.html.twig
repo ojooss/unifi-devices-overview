@@ -68,19 +68,35 @@
         <a href="{{ path('overview_csv', app.request.query.all) }}" class="btn btn-outline-secondary btn-sm">{{ 'button.overview.export_csv'|trans }}</a>
     </div>
 
+    {% macro sortLink(column, label, filters, query) %}
+        {% set nextDir = (filters.sort == column and filters.dir|default('desc')|lower == 'asc') ? 'desc' : 'asc' %}
+        <a href="{{ path('overview', query|merge({sort: column, dir: nextDir})) }}"
+           class="text-white text-decoration-none d-inline-flex align-items-center gap-1">
+            {{ label }}
+            <span class="small {{ filters.sort != column ? 'text-white-50' : '' }}">
+                {%- if filters.sort == column -%}
+                    {{ filters.dir|default('desc')|lower == 'asc' ? '▲' : '▼' }}
+                {%- else -%}
+                    ↕
+                {%- endif -%}
+            </span>
+        </a>
+    {% endmacro %}
+    {% import _self as sortable %}
+    {% set sortQuery = app.request.query.all %}
     <div class="card shadow-sm">
         <div class="table-responsive">
             <table class="table table-striped table-hover table-sm mb-0">
                 <thead class="table-dark">
                     <tr>
-                        <th class="ps-3">{{ 'label.overview.table.name'|trans }}</th>
+                        <th class="ps-3">{{ sortable.sortLink('name', 'label.overview.table.name'|trans, filters, sortQuery) }}</th>
                         <th>{{ 'label.overview.table.remark'|trans }}</th>
-                        <th>{{ 'label.overview.table.mac'|trans }}</th>
-                        <th>{{ 'label.overview.table.ip'|trans }}</th>
-                        <th>{{ 'label.overview.table.type'|trans }}</th>
-                        <th>{{ 'label.overview.table.network'|trans }}</th>
-                        <th>{{ 'label.overview.table.updated'|trans }}</th>
-                        <th>{{ 'label.overview.table.seen'|trans }}</th>
+                        <th>{{ sortable.sortLink('mac', 'label.overview.table.mac'|trans, filters, sortQuery) }}</th>
+                        <th>{{ sortable.sortLink('ip', 'label.overview.table.ip'|trans, filters, sortQuery) }}</th>
+                        <th>{{ sortable.sortLink('type', 'label.overview.table.type'|trans, filters, sortQuery) }}</th>
+                        <th>{{ sortable.sortLink('network', 'label.overview.table.network'|trans, filters, sortQuery) }}</th>
+                        <th>{{ sortable.sortLink('updated', 'label.overview.table.updated'|trans, filters, sortQuery) }}</th>
+                        <th>{{ sortable.sortLink('seen', 'label.overview.table.seen'|trans, filters, sortQuery) }}</th>
                         <th></th>
                     </tr>
                 </thead>

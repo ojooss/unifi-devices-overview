@@ -24,6 +24,8 @@ class OverviewController extends AbstractController
             'network' => $request->query->get('network'),
             'search' => $request->query->get('search'),
             'type' => $request->query->get('type'),
+            'sort' => $request->query->get('sort'),
+            'dir' => $request->query->get('dir'),
         ];
 
         $leases = $leaseRepository->findFiltered($filters);
@@ -45,6 +47,8 @@ class OverviewController extends AbstractController
             'network' => $request->query->get('network'),
             'search' => $request->query->get('search'),
             'type' => $request->query->get('type'),
+            'sort' => $request->query->get('sort'),
+            'dir' => $request->query->get('dir'),
         ];
 
         $leases = $leaseRepository->findFiltered($filters);

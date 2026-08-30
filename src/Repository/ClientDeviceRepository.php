@@ -16,6 +16,16 @@ class ClientDeviceRepository extends ServiceEntityRepository
         parent::__construct($registry, ClientDevice::class);
     }
 
+    private const array SORTABLE_COLUMNS = [
+        'name' => 'd.hostname',
+        'mac' => 'd.macAddress',
+        'ip' => 'd.ipAddress',
+        'type' => 'd.ipType',
+        'network' => 'n.name',
+        'updated' => 'd.lastUpdatedAt',
+        'seen' => 'd.seenAt',
+    ];
+
     /**
      * @param array<string, string> $filters
      * @return ClientDevice[]
@@ -24,9 +34,18 @@ class ClientDeviceRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('d')
             ->leftJoin('d.network', 'n')
-            ->addSelect('n')
-            ->orderBy('d.seenAt', 'DESC')
-            ->addOrderBy('d.hostname', 'ASC');
+            ->addSelect('n');
+
+        $sortField = self::SORTABLE_COLUMNS[$filters['sort'] ?? ''] ?? null;
+        $sortDir = strtoupper($filters['dir'] ?? '') === 'ASC' ? 'ASC' : 'DESC';
+
+        if ($sortField !== null) {
+            $qb->orderBy($sortField, $sortDir)
+                ->addOrderBy('d.hostname', 'ASC');
+        } else {
+            $qb->orderBy('d.seenAt', 'DESC')
+                ->addOrderBy('d.hostname', 'ASC');
+        }
 
         if (!empty($filters['network'])) {
             $qb->andWhere('n.name = :network')
