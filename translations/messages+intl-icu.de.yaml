@@ -1,7 +1,5 @@
 # Navigation
 nav.brand: 'UniFi Overview'
-nav.overview: Übersicht
-nav.import: Import
 
 # Dokumenttitel (<title>) und Seitenüberschriften (<h1>)
 title.base: 'UniFi Overview'
