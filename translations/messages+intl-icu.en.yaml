@@ -38,6 +38,7 @@ placeholder.overview.remark: 'Enter remark…'
 
 # Buttons and links
 button.overview.import: '+ Import Support File'
+button.overview.scan: 'Scan UniFi'
 button.overview.filter: Filter
 button.overview.reset: Reset
 button.overview.reset_filters: 'Reset filters'
@@ -80,4 +81,8 @@ empty.overview.default: 'No data available yet.'
 message.upload.success: '{count, plural, one{# device entry imported successfully.} other{# device entries imported successfully.}}'
 message.upload.error: 'Import failed: {error}'
 message.upload.error.generic: 'An unexpected error occurred. Please try again.'
+message.scan.success: 'Scan finished: {created, plural, one{# new device} other{# new devices}}, {updated, plural, one{# device updated} other{# devices updated}}.'
+message.scan.error: 'Scan failed: {error}'
+message.scan.error.generic: 'An unexpected error occurred during the scan. Please check the logs.'
+message.scan.not_configured: 'The UniFi scan is not configured. Set UNIFI_BASE_URL and UNIFI_API_KEY.'
 message.lease.deleted: 'Entry deleted successfully.'

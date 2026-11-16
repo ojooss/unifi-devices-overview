@@ -75,6 +75,39 @@ class ClientDevice
         $this->unifiAlias = $unifiAlias;
     }
 
+    /**
+     * Applies data from a UniFi API scan. In contrast to update() it keeps values
+     * the API does not provide (hostname, lease expiry) and never moves the
+     * observation time backwards: an older scan result only refreshes the metadata.
+     */
+    public function updateFromScan(
+        ?Network $network,
+        string $ipAddress,
+        ?string $hostname,
+        string $ipType,
+        \DateTimeImmutable $now,
+        \DateTimeImmutable $seenAt,
+        ?string $unifiAlias,
+    ): void {
+        $this->lastUpdatedAt = $now;
+        $this->ipType = $ipType;
+
+        if ($hostname !== null) {
+            $this->hostname = $hostname;
+        }
+        if ($unifiAlias !== null) {
+            $this->unifiAlias = $unifiAlias;
+        }
+
+        if ($seenAt >= $this->seenAt) {
+            $this->seenAt = $seenAt;
+            $this->network = $network ?? $this->network;
+            if ($ipAddress !== '') {
+                $this->ipAddress = $ipAddress;
+            }
+        }
+    }
+
     public function getId(): ?int
     {
         return $this->id;

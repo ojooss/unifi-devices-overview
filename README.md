@@ -5,6 +5,7 @@ Upload a support file and instantly see which device (hostname + MAC address) wa
 
 ## What it does
 
+- Scan the Dream Machine directly via the UniFi API (button or `app:unifi:scan` command)
 - Import UniFi support archives (`.tgz`) via a simple upload form
 - Shows a filterable table of all device leases: hostname, MAC, IP address, IP type (fixed / dynamic), network, and timestamps
 - Re-uploading the same file is safe — records are updated, not duplicated
@@ -80,6 +81,49 @@ Open **http://localhost:8080** once the container is running.
 
 The filename contains a millisecond timestamp (e.g. `support-XXXX-1718000000000.tgz`) which the application uses to record *when* the leases were observed.
 
+## Scanning the Dream Machine directly (API key)
+
+Instead of uploading a support file you can let the application query the Dream Machine itself. The scan reads all clients the controller knows (including devices that are currently offline), creates new entries and updates existing ones by MAC address. Custom names and remarks are never overwritten. Support-file import keeps working alongside the scan, for example to fill in lease expiry dates, which the API does not provide.
+
+### 1. Create an API key
+
+1. Log in to your UniFi Dream Machine's management interface and open the **Network** application
+2. Find the API key page of the Network application. In recent versions it is called **Integrations**; if you cannot find it in the settings list, use the search field at the top of the settings or look for the "Integrations" entry in the icon bar on the left
+3. Click **Create API Key**, enter a name such as `unifi-overview`, and confirm
+4. Copy the key right away — it is shown only once. If you lose it, delete it and create a new one
+
+### 2. Check that the key works
+
+```bash
+read -rs UNIFI_API_KEY && export UNIFI_API_KEY   # paste the key, press Enter
+curl -sk -H "X-API-KEY: $UNIFI_API_KEY" https://<udm-address>/proxy/network/api/s/default/rest/user | head -c 500
+```
+
+A JSON response starting with `{"meta":{"rc":"ok"},"data":[...` means the key is valid. `-k` skips the certificate check, which is needed when the Dream Machine uses its default self-signed certificate.
+
+### 3. Configure the application
+
+Treat the key like a password and never commit it. Put the settings in `.env.local` (ignored by Git) and start the container with it:
+
+```bash
+UNIFI_BASE_URL=https://<udm-address>
+UNIFI_API_KEY=<your-key>
+UNIFI_VERIFY_TLS=false   # only for the default self-signed certificate
+```
+
+```bash
+docker compose --env-file .env.local up -d
+```
+
+`--env-file` *replaces* the `.env` file that Docker Compose reads by default, it does not add to it. Everything Compose substitutes into `docker-compose.yml` must therefore be in `.env.local`: the `UNIFI_*` values and, if you do not want the default `en`, also `APP_LOCALE` (for example `APP_LOCALE=de`). All other settings (`APP_SECRET`, `DATABASE_URL`) are unaffected, because the application reads the `.env` file inside the image itself. `.env.local` is excluded from the image via `.dockerignore`, so your key never ends up in it.
+
+See [Configuration](#configuration) for all variables. Without `UNIFI_API_KEY` the scan button is hidden.
+
+### 4. Run a scan
+
+- Click **Scan UniFi** on the overview page, or
+- run it on a schedule: `docker compose exec webserver php bin/console app:unifi:scan` (for example from cron)
+
 ## Using the application
 
 ### Import a support file
@@ -113,6 +157,10 @@ All configuration is done in the `.env` file or via environment variables passed
 | `APP_LOCALE`   | `en`                                   | UI language — `en` (English) or `de` (German)  |
 | `APP_ENV`      | `prod`                                 | Symfony environment, leave as `prod`            |
 | `DATABASE_URL` | `sqlite:///.../var/data/unifi.db`      | Database location, no need to change            |
+| `UNIFI_BASE_URL` | *(empty)*                            | Address of the Dream Machine, e.g. `https://192.168.1.1` |
+| `UNIFI_API_KEY`  | *(empty)*                            | API key for the scan; empty disables the scan   |
+| `UNIFI_SITE`     | `default`                            | UniFi site name                                 |
+| `UNIFI_VERIFY_TLS` | `true`                             | Set to `false` for a self-signed certificate    |
 
 ### Language
 
