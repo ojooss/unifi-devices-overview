@@ -14,12 +14,6 @@
         <a class="navbar-brand fw-bold" href="{{ path('overview') }}">
             📡 {{ 'nav.brand'|trans }}
         </a>
-        <div class="navbar-nav ms-auto">
-            <a class="nav-link {% if app.request.attributes.get('_route') == 'overview' %}active{% endif %}"
-               href="{{ path('overview') }}">{{ 'nav.overview'|trans }}</a>
-            <a class="nav-link {% if app.request.attributes.get('_route') == 'upload' %}active{% endif %}"
-               href="{{ path('upload') }}">{{ 'nav.import'|trans }}</a>
-        </div>
     </div>
 </nav>
 
