@@ -17,6 +17,7 @@ class UnifiScanService
         private readonly NetworkRepository $networkRepository,
         private readonly ClientDeviceRepository $deviceRepository,
         private readonly LoggerInterface $logger,
+        private readonly WebPortProbe $portProbe,
     ) {
     }
 
@@ -46,6 +47,8 @@ class UnifiScanService
         $now = new \DateTimeImmutable();
         $created = 0;
         $updated = 0;
+        /** @var array<string, ClientDevice> $scanned */
+        $scanned = [];
 
         foreach ($clients as $client) {
             $device = $devices[$client['mac']] ?? null;
@@ -67,11 +70,26 @@ class UnifiScanService
                 $client['name'],
             );
             $this->em->persist($device);
+            $scanned[$client['mac']] = $device;
         }
 
+        $this->probeWebPorts($scanned);
         $this->em->flush();
 
         return ['created' => $created, 'updated' => $updated];
+    }
+
+    /**
+     * @param array<string, ClientDevice> $devices
+     */
+    private function probeWebPorts(array $devices): void
+    {
+        $ips = array_map(static fn (ClientDevice $d): string => $d->getIpAddress(), $devices);
+        $open = $this->portProbe->probe(array_values($ips));
+
+        foreach ($devices as $device) {
+            $device->setWebPorts($open[$device->getIpAddress()] ?? []);
+        }
     }
 
     /**

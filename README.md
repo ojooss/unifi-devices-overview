@@ -266,6 +266,10 @@ The `@claude` workflow requires one secret in the repository settings
 
 ## Release Notes
 
+### Unreleased
+
+- **New:** The UniFi scan checks ports 80, 8080 and 443 on every device. If one is open, the IP address on the overview links to it (https on 443, otherwise http).
+
 ### 1.3.0 — 2026-07-12
 
 - **New:** Quick-help section on the upload page explains how to export a UniFi support file from the UniFi OS console.

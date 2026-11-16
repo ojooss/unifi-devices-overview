@@ -10,6 +10,7 @@ use App\Repository\ClientDeviceRepository;
 use App\Repository\NetworkRepository;
 use App\Service\UnifiApiClient;
 use App\Service\UnifiScanService;
+use App\Service\WebPortProbe;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
@@ -21,6 +22,7 @@ class UnifiScanServiceTest extends TestCase
      * @param list<array<string, mixed>> $networks
      * @param list<ClientDevice> $knownDevices
      * @param list<Network> $knownNetworks
+     * @param array<string, list<int>> $openPorts
      */
     private function makeService(
         array $clients,
@@ -28,7 +30,11 @@ class UnifiScanServiceTest extends TestCase
         array $knownDevices = [],
         array $knownNetworks = [],
         ?EntityManagerInterface $em = null,
+        array $openPorts = [],
     ): UnifiScanService {
+        $probe = $this->createStub(WebPortProbe::class);
+        $probe->method('probe')->willReturn($openPorts);
+
         $api = $this->createStub(UnifiApiClient::class);
         $api->method('isConfigured')->willReturn(true);
         $api->method('fetchClients')->willReturn($clients);
@@ -45,6 +51,7 @@ class UnifiScanServiceTest extends TestCase
             $networkRepo,
             $deviceRepo,
             new NullLogger(),
+            $probe,
         );
     }
 
@@ -191,6 +198,7 @@ class UnifiScanServiceTest extends TestCase
             $networkRepo,
             $deviceRepo,
             new NullLogger(),
+            $this->createStub(WebPortProbe::class),
         );
 
         $this->assertSame(['created' => 1, 'updated' => 0], $service->scan());
@@ -211,9 +219,40 @@ class UnifiScanServiceTest extends TestCase
             $this->createStub(NetworkRepository::class),
             $this->createStub(ClientDeviceRepository::class),
             new NullLogger(),
+            $this->createStub(WebPortProbe::class),
         );
 
         $this->expectException(\RuntimeException::class);
         $service->scan();
+    }
+
+    public function testStoresOpenWebPortsAndBuildsLink(): void
+    {
+        $known = new ClientDevice('aa:aa:aa:aa:aa:01', new \DateTimeImmutable('2026-01-01'));
+        $other = new ClientDevice('aa:aa:aa:aa:aa:02', new \DateTimeImmutable('2026-01-01'));
+
+        $this->makeService(
+            [$this->client('aa:aa:aa:aa:aa:01'), $this->client('aa:aa:aa:aa:aa:02', ['ip' => '192.168.3.11'])],
+            knownDevices: [$known, $other],
+            openPorts: ['192.168.3.10' => [80, 443]],
+        )->scan();
+
+        $this->assertSame('https://192.168.3.10', $known->getWebUrl());
+        $this->assertNull($other->getWebUrl());
+    }
+
+    public function testWebUrlFallsBackToHttpPorts(): void
+    {
+        $device = new ClientDevice('aa:aa:aa:aa:aa:01', new \DateTimeImmutable('2026-01-01'));
+        $device->update(null, '192.168.3.5', null, 'dynamic', null, new \DateTimeImmutable(), new \DateTimeImmutable());
+
+        $device->setWebPorts([8080]);
+        $this->assertSame('http://192.168.3.5:8080', $device->getWebUrl());
+
+        $device->setWebPorts([8080, 80]);
+        $this->assertSame('http://192.168.3.5', $device->getWebUrl());
+
+        $device->setWebPorts([]);
+        $this->assertNull($device->getWebUrl());
     }
 }

@@ -151,7 +151,13 @@
                             </button>
                         </td>
                         <td><code>{{ lease.macAddress }}</code></td>
-                        <td><code>{{ lease.ipAddress }}</code></td>
+                        <td>
+                            {% if lease.webUrl %}
+                                <a href="{{ lease.webUrl }}" target="_blank" rel="noopener noreferrer"><code>{{ lease.ipAddress }}</code></a>
+                            {% else %}
+                                <code>{{ lease.ipAddress }}</code>
+                            {% endif %}
+                        </td>
                         <td>
                             {% if lease.ipType == 'fixed' %}
                                 <span class="badge bg-success">{{ 'badge.type.fixed'|trans }}</span>

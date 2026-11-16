@@ -46,6 +46,10 @@ class ClientDevice
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $unifiAlias = null;
 
+    /** @var list<string>|null open web ports (80, 8080, 443) found by the last scan */
+    #[ORM\Column(type: 'simple_array', nullable: true)]
+    private ?array $webPorts = null;
+
     public function __construct(
         #[ORM\Column(length: 17)]
         private string $macAddress, /** Timestamp aus Support-Dateiname */
@@ -171,6 +175,32 @@ class ClientDevice
     public function setRemark(?string $remark): void
     {
         $this->remark = $remark;
+    }
+
+    /**
+     * @param list<int> $ports
+     */
+    public function setWebPorts(array $ports): void
+    {
+        $this->webPorts = $ports === [] ? null : array_map(strval(...), $ports);
+    }
+
+    /**
+     * Link target for the IP address: https on 443, otherwise http on 80 or 8080.
+     */
+    public function getWebUrl(): ?string
+    {
+        $ports = array_map(intval(...), $this->webPorts ?? []);
+        if ($this->ipAddress === '') {
+            return null;
+        }
+
+        return match (true) {
+            \in_array(443, $ports, true) => sprintf('https://%s', $this->ipAddress),
+            \in_array(80, $ports, true) => sprintf('http://%s', $this->ipAddress),
+            \in_array(8080, $ports, true) => sprintf('http://%s:8080', $this->ipAddress),
+            default => null,
+        };
     }
 
     public function getUnifiAlias(): ?string
