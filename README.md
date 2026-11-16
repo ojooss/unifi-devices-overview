@@ -266,10 +266,12 @@ The `@claude` workflow requires one secret in the repository settings
 
 ## Release Notes
 
-### Unreleased
+### 1.4.0 — 2026-11-16
 
+- **New:** Scan the Dream Machine directly via the UniFi API (button on the overview or `app:unifi:scan` command). The scan adds new devices and updates known ones by MAC address; it needs `UNIFI_BASE_URL` and `UNIFI_API_KEY`, see the setup section.
 - **Changed:** The overview shows the custom name, the UniFi alias and the hostname in separate, sortable columns. The text search now covers all of them plus remark, MAC and IP address. The filters are ordered search, IP type, network.
 - **New:** The UniFi scan checks ports 80, 8080 and 443 on every device. If one is open, the IP address on the overview links to it (https on 443, otherwise http).
+- **Changed:** The Overview and Import links are removed from the navigation bar. The Import button on the overview and the title link remain.
 
 ### 1.3.0 — 2026-07-12
 
