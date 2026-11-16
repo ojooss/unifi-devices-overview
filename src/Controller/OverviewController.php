@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\ClientDevice;
 use App\Repository\ClientDeviceRepository;
 use App\Repository\NetworkRepository;
+use App\Service\UnifiScanService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +20,7 @@ class OverviewController extends AbstractController
         Request $request,
         ClientDeviceRepository $leaseRepository,
         NetworkRepository $networkRepository,
+        UnifiScanService $scanService,
     ): Response {
         $filters = [
             'network' => $request->query->get('network'),
@@ -35,6 +37,7 @@ class OverviewController extends AbstractController
             'leases' => $leases,
             'networks' => $networks,
             'filters' => $filters,
+            'scan_enabled' => $scanService->isConfigured(),
         ]);
     }
 

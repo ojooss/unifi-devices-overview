@@ -38,6 +38,7 @@ placeholder.overview.remark: 'Bemerkung eingeben …'
 
 # Schaltflächen und Links
 button.overview.import: '+ Support-Datei importieren'
+button.overview.scan: 'UniFi scannen'
 button.overview.filter: Filtern
 button.overview.reset: Zurücksetzen
 button.overview.reset_filters: 'Filter zurücksetzen'
@@ -80,4 +81,8 @@ empty.overview.default: 'Noch keine Daten vorhanden.'
 message.upload.success: '{count, plural, one{# Geräteeintrag erfolgreich importiert.} other{# Geräteeinträge erfolgreich importiert.}}'
 message.upload.error: 'Import fehlgeschlagen: {error}'
 message.upload.error.generic: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.'
+message.scan.success: 'Scan abgeschlossen: {created, plural, one{# neues Gerät} other{# neue Geräte}}, {updated, plural, one{# Gerät aktualisiert} other{# Geräte aktualisiert}}.'
+message.scan.error: 'Scan fehlgeschlagen: {error}'
+message.scan.error.generic: 'Beim Scan ist ein unerwarteter Fehler aufgetreten. Bitte prüfe die Logs.'
+message.scan.not_configured: 'Der UniFi-Scan ist nicht konfiguriert. Setze UNIFI_BASE_URL und UNIFI_API_KEY.'
 message.lease.deleted: 'Eintrag erfolgreich gelöscht.'

@@ -11,3 +11,10 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    App\Service\UnifiApiClient:
+        arguments:
+            $baseUrl: '%env(UNIFI_BASE_URL)%'
+            $apiKey: '%env(UNIFI_API_KEY)%'
+            $site: '%env(UNIFI_SITE)%'
+            $verifyTls: '%env(bool:UNIFI_VERIFY_TLS)%'
