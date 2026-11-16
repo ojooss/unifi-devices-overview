@@ -19,19 +19,6 @@
     <div class="card-body">
         <div class="row g-2 align-items-end">
             <div class="col-md-3">
-                <label class="form-label small fw-semibold mb-1">{{ 'label.overview.filter.network'|trans }}</label>
-                <select name="network" class="form-select form-select-sm">
-                    <option value="">{{ 'option.network.all'|trans }}</option>
-                    {% for network in networks %}
-                        <option value="{{ network.name }}"
-                            {{ filters.network == network.name ? 'selected' : '' }}>
-                            {{ network.name }}
-                            {% if network.subnet %}({{ network.subnet }}){% endif %}
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-md-3">
                 <label class="form-label small fw-semibold mb-1">{{ 'label.overview.filter.search'|trans }}</label>
                 <input type="text" name="search" class="form-control form-control-sm"
                        value="{{ filters.search }}"
@@ -43,6 +30,19 @@
                     <option value="">{{ 'option.type.all'|trans }}</option>
                     <option value="fixed" {{ filters.type == 'fixed' ? 'selected' : '' }}>{{ 'option.type.fixed'|trans }}</option>
                     <option value="dynamic" {{ filters.type == 'dynamic' ? 'selected' : '' }}>{{ 'option.type.dynamic'|trans }}</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold mb-1">{{ 'label.overview.filter.network'|trans }}</label>
+                <select name="network" class="form-select form-select-sm">
+                    <option value="">{{ 'option.network.all'|trans }}</option>
+                    {% for network in networks %}
+                        <option value="{{ network.name }}"
+                            {{ filters.network == network.name ? 'selected' : '' }}>
+                            {{ network.name }}
+                            {% if network.subnet %}({{ network.subnet }}){% endif %}
+                        </option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="col-md-2">
@@ -97,6 +97,8 @@
                 <thead class="table-dark">
                     <tr>
                         <th class="ps-3">{{ sortable.sortLink('name', 'label.overview.table.name'|trans, filters, sortQuery) }}</th>
+                        <th>{{ sortable.sortLink('alias', 'label.overview.table.alias'|trans, filters, sortQuery) }}</th>
+                        <th>{{ sortable.sortLink('hostname', 'label.overview.table.hostname'|trans, filters, sortQuery) }}</th>
                         <th>{{ 'label.overview.table.remark'|trans }}</th>
                         <th>{{ sortable.sortLink('mac', 'label.overview.table.mac'|trans, filters, sortQuery) }}</th>
                         <th>{{ sortable.sortLink('ip', 'label.overview.table.ip'|trans, filters, sortQuery) }}</th>
@@ -120,21 +122,13 @@
                                     data-return="{{ app.request.uri }}">
                                 {% if lease.customName %}
                                     <span class="fw-semibold text-body">{{ lease.customName }}</span>
-                                    {% if lease.unifiAlias or lease.hostname %}
-                                        <br><small class="text-muted fw-normal">{{ lease.unifiAlias ?? lease.hostname }}</small>
-                                    {% endif %}
-                                {% elseif lease.unifiAlias %}
-                                    <span class="text-body">{{ lease.unifiAlias }}</span>
-                                    {% if lease.hostname %}
-                                        <br><small class="text-muted fw-normal">{{ lease.hostname }}</small>
-                                    {% endif %}
-                                {% elseif lease.hostname %}
-                                    {{ lease.hostname }}
                                 {% else %}
                                     <em class="text-muted">–</em>
                                 {% endif %}
                             </button>
                         </td>
+                        <td>{{ lease.unifiAlias ?? '–' }}</td>
+                        <td>{{ lease.hostname ?? '–' }}</td>
                         <td>
                             <button type="button"
                                     class="btn btn-link btn-sm p-0 text-start text-decoration-none remark-btn"
@@ -151,7 +145,13 @@
                             </button>
                         </td>
                         <td><code>{{ lease.macAddress }}</code></td>
-                        <td><code>{{ lease.ipAddress }}</code></td>
+                        <td>
+                            {% if lease.webUrl %}
+                                <a href="{{ lease.webUrl }}" target="_blank" rel="noopener noreferrer"><code>{{ lease.ipAddress }}</code></a>
+                            {% else %}
+                                <code>{{ lease.ipAddress }}</code>
+                            {% endif %}
+                        </td>
                         <td>
                             {% if lease.ipType == 'fixed' %}
                                 <span class="badge bg-success">{{ 'badge.type.fixed'|trans }}</span>

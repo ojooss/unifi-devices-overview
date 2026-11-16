@@ -17,7 +17,9 @@ class ClientDeviceRepository extends ServiceEntityRepository
     }
 
     private const array SORTABLE_COLUMNS = [
-        'name' => 'd.hostname',
+        'name' => 'd.customName',
+        'alias' => 'd.unifiAlias',
+        'hostname' => 'd.hostname',
         'mac' => 'd.macAddress',
         'ip' => 'd.ipAddress',
         'type' => 'd.ipType',
@@ -54,8 +56,8 @@ class ClientDeviceRepository extends ServiceEntityRepository
 
         if (!empty($filters['search'])) {
             $qb->andWhere(
-                'd.hostname LIKE :search OR d.macAddress LIKE :search' .
-                ' OR d.customName LIKE :search OR d.remark LIKE :search'
+                'd.customName LIKE :search OR d.unifiAlias LIKE :search OR d.hostname LIKE :search' .
+                ' OR d.remark LIKE :search OR d.macAddress LIKE :search OR d.ipAddress LIKE :search'
             )
                 ->setParameter('search', '%' . $filters['search'] . '%');
         }

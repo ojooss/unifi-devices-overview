@@ -34,10 +34,10 @@ class OverviewSortTest extends AbstractControllerTest
         $em->persist($zeta);
     }
 
-    public function testSortByNameAscendingOrdersHostnamesAlphabetically(): void
+    public function testSortByHostnameAscendingOrdersHostnamesAlphabetically(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/', ['sort' => 'name', 'dir' => 'asc']);
+        $client->request('GET', '/', ['sort' => 'hostname', 'dir' => 'asc']);
 
         $this->assertResponseIsSuccessful();
         $content = $client->getResponse()->getContent();
@@ -47,10 +47,10 @@ class OverviewSortTest extends AbstractControllerTest
         );
     }
 
-    public function testSortByNameDescendingReversesOrder(): void
+    public function testSortByHostnameDescendingReversesOrder(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/', ['sort' => 'name', 'dir' => 'desc']);
+        $client->request('GET', '/', ['sort' => 'hostname', 'dir' => 'desc']);
 
         $this->assertResponseIsSuccessful();
         $content = $client->getResponse()->getContent();

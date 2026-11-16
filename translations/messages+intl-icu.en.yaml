@@ -16,7 +16,9 @@ label.upload.submit: Import
 label.overview.filter.network: Network
 label.overview.filter.search: 'Search (Name / MAC)'
 label.overview.filter.type: 'IP Type'
-label.overview.table.name: 'Device Name'
+label.overview.table.name: 'Name'
+label.overview.table.alias: 'UniFi Alias'
+label.overview.table.hostname: Hostname
 label.overview.table.remark: Remark
 label.overview.table.mac: 'MAC Address'
 label.overview.table.ip: 'IP Address'
