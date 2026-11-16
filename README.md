@@ -268,6 +268,7 @@ The `@claude` workflow requires one secret in the repository settings
 
 ### Unreleased
 
+- **Changed:** The overview shows the custom name, the UniFi alias and the hostname in separate, sortable columns. The text search now covers all of them plus remark, MAC and IP address. The filters are ordered search, IP type, network.
 - **New:** The UniFi scan checks ports 80, 8080 and 443 on every device. If one is open, the IP address on the overview links to it (https on 443, otherwise http).
 
 ### 1.3.0 — 2026-07-12
