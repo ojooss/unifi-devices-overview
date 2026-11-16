@@ -29,7 +29,7 @@ bash .quality/gate-full.sh   # builds tester image → phpcs + phpstan + phpunit
 
 ## Rules
 
-1. **Never push directly to `master`** — always create a feature branch and open a PR.
+1. **Never push directly to `master`** — always create a feature branch and open a PR (enforced by a GitHub repository rule).
 2. **Branch naming**: `feature/issue-{nr}-{short-description}` (e.g. `feature/issue-42-dark-mode`)
 3. **PR description** must include `Closes #{nr}`.
 4. **Gate must be green** before the PR is created.
@@ -50,13 +50,16 @@ Follow these files as templates for new code:
 
 ## Release
 
-1. Bump `"version"` in `composer.json` to the new semver (e.g. `1.1.3`).
-2. Add a new section to `## Release Notes` in `README.md` (`### 1.1.3 — YYYY-MM-DD` + bullets).
-3. Commit: `Version 1.1.3`.
-4. Push commit and tag:
+`master` is protected by a repository rule: changes only get in through a pull request, direct pushes are rejected (also with `--force`).
+
+1. Create a branch `release/1.1.3` from `master`.
+2. Bump `"version"` in `composer.json` to the new semver (e.g. `1.1.3`).
+3. Add a new section to `## Release Notes` in `README.md` (`### 1.1.3 — YYYY-MM-DD` + bullets).
+4. Commit: `Version 1.1.3`, push the branch and open a PR. The gate and CI must be green.
+5. After the merge, tag the merge commit on `master` and push the tag:
    ```bash
+   git checkout master && git pull
    git tag 1.1.3
-   git push origin master
    git push origin 1.1.3
    ```
 
