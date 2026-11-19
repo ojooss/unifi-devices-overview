@@ -1,0 +1,2 @@
+# Always use LF line endings, even with core.autocrlf=true (files run inside Linux containers)
+* text=auto eol=lf
