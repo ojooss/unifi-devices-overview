@@ -268,6 +268,10 @@ The `@claude` workflow requires one secret in the repository settings
 
 ## Release Notes
 
+### 1.5.0 — 2026-11-19
+
+- **New:** Scheduled UniFi scan inside the container. Set `UNIFI_SCAN_SCHEDULE` to a cron expression (e.g. `0 * * * *`) and the container runs `app:unifi:scan` on that schedule; output goes to `docker logs`. No cron job on the host is needed.
+
 ### 1.4.0 — 2026-11-16
 
 - **New:** Scan the Dream Machine directly via the UniFi API (button on the overview or `app:unifi:scan` command). The scan adds new devices and updates known ones by MAC address; it needs `UNIFI_BASE_URL` and `UNIFI_API_KEY`, see the setup section.
