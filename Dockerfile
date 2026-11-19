@@ -38,6 +38,9 @@ FROM base AS production
 
 LABEL maintainer="ojooss"
 
+RUN apt-get update && apt-get install -y --no-install-recommends cron \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
 COPY docker/php.ini /usr/local/etc/php/conf.d/uploads.ini
 COPY docker/entrypoint.sh /usr/local/bin/custom-entrypoint

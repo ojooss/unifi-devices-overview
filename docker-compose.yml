@@ -9,6 +9,7 @@ services:
       - UNIFI_API_KEY=${UNIFI_API_KEY:-}
       - UNIFI_SITE=${UNIFI_SITE:-default}
       - UNIFI_VERIFY_TLS=${UNIFI_VERIFY_TLS:-true}
+      - UNIFI_SCAN_SCHEDULE=${UNIFI_SCAN_SCHEDULE:-}
     volumes:
       - data:/var/www/html/var/data
     ports:

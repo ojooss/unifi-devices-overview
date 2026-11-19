@@ -122,7 +122,8 @@ See [Configuration](#configuration) for all variables. Without `UNIFI_API_KEY` t
 ### 4. Run a scan
 
 - Click **Scan UniFi** on the overview page, or
-- run it on a schedule: `docker compose exec webserver php bin/console app:unifi:scan` (for example from cron)
+- run it on a schedule: set `UNIFI_SCAN_SCHEDULE` to a cron expression, e.g. `UNIFI_SCAN_SCHEDULE=0 * * * *` for hourly (container time, UTC by default). The container then runs the scan itself, output goes to `docker logs`. No cron job on the host is needed.
+- or run it manually: `docker compose exec webserver php bin/console app:unifi:scan`
 
 ## Using the application
 
@@ -161,6 +162,7 @@ All configuration is done in the `.env` file or via environment variables passed
 | `UNIFI_API_KEY`  | *(empty)*                            | API key for the scan; empty disables the scan   |
 | `UNIFI_SITE`     | `default`                            | UniFi site name                                 |
 | `UNIFI_VERIFY_TLS` | `true`                             | Set to `false` for a self-signed certificate    |
+| `UNIFI_SCAN_SCHEDULE` | *(empty)*                       | Cron expression for a scheduled scan, e.g. `0 * * * *`; empty disables it |
 
 ### Language
 
