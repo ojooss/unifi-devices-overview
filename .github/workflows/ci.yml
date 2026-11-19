@@ -1,11 +1,12 @@
 name: CI / CD
 
+# Branches are tested through their pull request (merge result); push runs are
+# only for master and tags, so a PR push does not start the tests twice.
 on:
   push:
-    branches: ["**"]
+    branches: [master]
     tags: ["**"]
   pull_request:
-    branches: ["**"]
 
 # Group by ref so that branch/PR runs are cancelled when a newer commit arrives,
 # but tag runs are never cancelled — losing a tag run would skip the Docker publish.
